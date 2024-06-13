@@ -4,7 +4,6 @@ import axios from 'axios';
 
 
 
-
 let defaultTaskData = {
   ProjectOrClientName: '',
   Category: '',
@@ -13,11 +12,11 @@ let defaultTaskData = {
   ConsumingTimeInMin: '',
 }
 
-function UserHome() {
+function TaskView() {
   const [showModal, setShowModal] = React.useState(false);
+
   const [isUpdate, setIsUpdate] = useState(false);
   const [formData, setFormData] = useState(defaultTaskData);
-
 
   const [taskData, setTaskData] = useState([]);
   const handleChange = (e) => {
@@ -28,21 +27,7 @@ function UserHome() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData)
 
-    axios.post('http://localhost:3001/api/add-data', formData)
-
-      .then(response => {
-        alert('Data saved successfully');
-        fetchTasks();  // Fetch updated tasks after adding new data
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-    setFormData(defaultTaskData)
-  };
 
   const fetchTasks = () => {
     axios.get('http://localhost:3001/api/fetch-data')
@@ -96,15 +81,10 @@ function UserHome() {
   }, []);
 
   return (
-    <div className="homePage">
-      {/* dfsdfd */}
+    <div className="TaskView">
+    
       {/* Add Task Modal Add  */}
       <>
-        {/* <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-            <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
-              Add Task
-            </span>
-          </button> */}
 
         {showModal ? (
           <>
@@ -264,19 +244,6 @@ function UserHome() {
         ) : null}
       </>
 
-
-
-
-
-
-          {/* Modal Button Here  */}
-      <div className="container mx-auto px-4 bg-slate-200 max-w-7xl rounded p-3">
-        <div className="m-2 p-2">
-          <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-            <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
-              Add Task
-            </span>
-          </button>
           {/* Table task show day wise only */}
           <div>
             <h1 className="text-2xl font-bold text-center py-3 my-2">Task Afford Report</h1>
@@ -315,9 +282,9 @@ function UserHome() {
             </table>
           </div>
         </div>
-      </div>
-    </div>
+      
+   
   );
 }
 
-export default UserHome;
+export default TaskView;

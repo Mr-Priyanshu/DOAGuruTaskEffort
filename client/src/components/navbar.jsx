@@ -10,24 +10,29 @@ import {
   Transition,
 } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Link } from "react-router-dom"
+
+// import TaskView from "../pages/Employee/taskShow"
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Task', href: '#', current: false },
+  { name: 'Dashboard', href: 'UserHome', current: true },
+  { name: 'Task View', href: 'TaskView', current: true },
   { name: 'Projects', href: '#', current: false },
   { name: 'Report', href: '#', current: false },
 ]
 
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
-}
+  }
+  
+  export default function Navbar({Logout}) {
 
-export default function Navbar() {
   return (
     <Disclosure as="nav" className="bg-white-800">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-3 lg:px-1">
+          <div className="mx-auto max-w-full sm:mx-5 px-2 sm:px-3 lg:px-1">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
@@ -52,9 +57,9 @@ export default function Navbar() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
-                        href={item.href}
+                        to={item.href}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -62,7 +67,7 @@ export default function Navbar() {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -101,32 +106,32 @@ export default function Navbar() {
                     <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <MenuItem>
                         {({ focus }) => (
-                          <a
-                            href="#"
+                          <Link
+                            to="#"
                             className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Your Profile
-                          </a>
+                          </Link>
                         )}
                       </MenuItem>
                       <MenuItem>
                         {({ focus }) => (
-                          <a
-                            href="#"
+                          <Link
+                            to="#"
                             className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Settings
-                          </a>
+                          </Link>
                         )}
                       </MenuItem>
                       <MenuItem>
                         {({ focus }) => (
-                          <a
-                            href="#"
+                          <Link
+                            onClick={Logout}
                             className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Sign out
-                          </a>
+                          </Link>
                         )}
                       </MenuItem>
                     </MenuItems>

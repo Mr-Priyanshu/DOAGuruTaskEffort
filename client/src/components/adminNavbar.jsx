@@ -1,6 +1,6 @@
 import CLogo from "../assets/images/CLogo.png"
 import { Link } from "react-router-dom"
-import EmployeePage from "../pages/Admin/Employees"
+
 
 
 import {
@@ -16,8 +16,8 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: "", current: true },
-  { name: 'Employees', href: {EmployeePage}, current: false },
+  { name: 'Dashboard', href: "", current:true },
+  { name: 'Register Users', href:"", current: false },
   { name: 'Projects', href: '#', current: false },
   { name: 'View Report', href: '#', current: false },
 ]
