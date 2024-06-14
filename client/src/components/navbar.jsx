@@ -26,6 +26,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
   }
   
+  // eslint-disable-next-line react/prop-types
   export default function Navbar({Logout}) {
 
   return (
@@ -113,7 +114,7 @@ function classNames(...classes) {
                             Your Profile
                           </Link>
                         )}
-                      </MenuItem>
+                      </MenuItem> 
                       <MenuItem>
                         {({ focus }) => (
                           <Link
@@ -126,12 +127,12 @@ function classNames(...classes) {
                       </MenuItem>
                       <MenuItem>
                         {({ focus }) => (
-                          <Link
-                            onClick={Logout}
+                          <button
+                            onClick={() => Logout()}
                             className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Sign out
-                          </Link>
+                          </button>
                         )}
                       </MenuItem>
                     </MenuItems>
@@ -147,7 +148,7 @@ function classNames(...classes) {
                 <DisclosureButton
                   key={item.name}
                   as="a"
-                  href={item.href}
+                  to={item.href}
                   className={classNames(
                     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'

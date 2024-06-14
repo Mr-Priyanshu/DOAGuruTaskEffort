@@ -16,27 +16,54 @@ function LoginPage() {
     axios.post('http://localhost:3001/api/login', { emailId, password })
 
       .then(response => {
+        if (response.data && response.data.user) {
+          let save = response.data.user;
+          save = JSON.stringify(save);
+          localStorage.setItem('user', save);
         alert(response.data.message);
         console.log(response.data.message)
         navigate('/UserHome')
+        } else {
+          console.error('Unexpected response format:', response.data);
+          alert('Login successful, but user data is missing.');
+        }
       })
       .catch(error => {
-        alert(error.response.data.message);
-        console.log(error.response.data.message)
+        if (error.response && error.response.data && error.response.data.message) {
+          alert(error.response.data.message);
+          console.log(error.response.data.message);
+        } else {
+          alert('Login failed: an unknown error occurred');
+          console.log('Error details:', error);
+        }
       });
+      
   };
 
   const handleAdminLogin = (e) => {
     e.preventDefault()
     axios.post('http://localhost:3001/api/admin-login', { emailId, password })
       .then(response => {
+        if (response.data && response.data.user) {
+          let save = response.data.user;
+          save = JSON.stringify(save);
+          localStorage.setItem('user', save);
         alert(response.data.message);
         console.log(response.data.message)
         navigate('/registerUser')
+        } else {
+          console.error('Unexpected response format:', response.data);
+          alert('Login successful, but user data is missing.');
+        }
       })
       .catch(error => {
-        alert(error.response.data.message);
-        console.log(error.response.data.message)
+        if (error.response && error.response.data && error.response.data.message) {
+          alert(error.response.data.message);
+          console.log(error.response.data.message);
+        } else {
+          alert('Login failed: an unknown error occurred');
+          console.log('Error details:', error);
+        }
       });
   }
 
@@ -74,7 +101,7 @@ function LoginPage() {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type={emailId}
                   autoComplete="email"
                   onChange={(e) => setEmailId(e.target.value)}
                   required
@@ -98,7 +125,7 @@ function LoginPage() {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
                   required

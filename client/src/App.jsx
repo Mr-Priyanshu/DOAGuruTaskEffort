@@ -16,12 +16,14 @@ import RegisterUser from './pages/Admin/registerUser';
 function App() {
   // const [Effect, SetEffect] = useState(false)
   const navigate = useNavigate();
-
+// setTimeout(() =>{
+//   navigate("/action");
+// }, 2000);
   const handleLogout = () => {
     console.log('Logout function called');
-    localStorage.removeItem('user')
-    console.log('After Logout:', localStorage.getItem('user'));
-    navigate('/')
+    // localStorage.removeItem('user')
+    navigate("/")
+    // console.log('After Logout:', localStorage.getItem('user'));
     // SetEffect(!Effect);
   }
 
