@@ -3,6 +3,7 @@ const {
   DeleteTask,
   FetchData,
   UpdateTask,
+  FetchFUllData,
 } = require('./controller/iteammController');
 const {
   UserLogin,
@@ -20,6 +21,8 @@ const router = express.Router();
 router.post('/api/add-data', AddData);
 // Route to fetch data
 router.get('/api/fetch-data', FetchData);
+// this route for fetch full task report
+router.get('/api/fetch-full-data', FetchFUllData);
 //  Update Task Details 
 router.post('/api/update-task', UpdateTask);
 // Route to delete a task

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
-
-
+import DatePicker from "react-datepicker"
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 let defaultTaskData = {
@@ -14,9 +14,10 @@ let defaultTaskData = {
 }
 
 function UserHome() {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [formData, setFormData] = useState(defaultTaskData);
+  const [date, setDate] = useState(new Date());
 
 
   const [taskData, setTaskData] = useState([]);
@@ -35,8 +36,8 @@ function UserHome() {
     axios.post('http://localhost:3001/api/add-data', formData)
 
       .then(response => {
-        alert('Data saved successfully');
-        fetchTasks();  // Fetch updated tasks after adding new data
+        alert('Data saved successfully Ho gya he');
+        fetchTasks(date);  // Fetch updated tasks after adding new data
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -44,8 +45,13 @@ function UserHome() {
     setFormData(defaultTaskData)
   };
 
-  const fetchTasks = () => {
-    axios.get('http://localhost:3001/api/fetch-data')
+
+  const fetchTasks = (selectedDate) => {
+    // console.log(selectedDate)
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+    console.log(formattedDate)
+
+    axios.get('http://localhost:3001/api/fetch-data', { params: { date: formattedDate } })
       .then(response => {
         setTaskData(response.data);
         console.log(response.data)
@@ -64,13 +70,14 @@ function UserHome() {
 
   }
   const updateTask = (e) => {
-
+    console.log("A gya ")
     axios.post('http://localhost:3001/api/update-task', formData)
       .then(response => {
-        alert('Edit Ho gya');
+        alert('Edit Ho gya task');
         console.log(response.data);
         fetchTasks()
         setIsUpdate(false)
+        setShowModal(false)
       })
       .catch((err) => {
         console.log("There is a Error to edit : ", err)
@@ -82,7 +89,7 @@ function UserHome() {
   const handleDeleteTask = (id) => {
     axios.post('http://localhost:3001/api/delete-task', { id })
       .then(response => {
-        alert('Task deleted successfully');
+        alert('Task ko remove kr diya mene');
         axios.get('http://localhost:3001/api/get-tasks')
           .then(response => setFormData(response.data));
         fetchTasks()
@@ -92,8 +99,8 @@ function UserHome() {
 
 
   useEffect(() => {
-    fetchTasks();
-  }, []);
+    fetchTasks(date);
+  }, [date]);
 
   return (
     <div className="homePage">
@@ -127,11 +134,13 @@ function UserHome() {
                         X
                       </span>
                     </button>
+
+
                   </div>
                   {/*body*/}
                   <div className="relative p-6 flex-auto">
 
-                    <form>
+                    <form onSubmit={!isUpdate ? handleSubmit : updateTask}>
                       <div className="container mx-auto px-4 bg-slate-200 max-w-7xl rounded p-3">
                         <div className="m-2 p-2 border border-white rounded-lg">
                           {/* <div>
@@ -142,7 +151,7 @@ function UserHome() {
                               {/* Client and Project  Name Select  */}
                               <div className="project-client-name">
                                 <label htmlFor="ProjectClient" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Project / Client Name</label>
-                                <select id="ProjectClient" name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option>Choose a ProjectOrClientName</option>
                                   <option value="ABC">ABC</option>
                                   <option value="DEF">DEF</option>
@@ -153,7 +162,7 @@ function UserHome() {
                               {/* Project and Client work task category select  */}
                               <div className="project-task-category">
                                 <label htmlFor="Category" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Category</label>
-                                <select id="Category" name="Category" value={formData.Category} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                <select id="Category" required name="Category" value={formData.Category} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option>Choose a Category</option>
                                   <option value="ABC">ABC</option>
                                   <option value="DEF">DEF</option>
@@ -164,7 +173,7 @@ function UserHome() {
                               {/* After category select sub category under category section  */}
                               <div className="project-task-sub-category">
                                 <label htmlFor="SubCategory" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Sub-Category</label>
-                                <select id="SubCategory" name="SubCategory" value={formData.SubCategory} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                <select id="SubCategory" required name="SubCategory" value={formData.SubCategory} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option>Choose a Sub-category</option>
                                   <option value="ABC">ABC</option>
                                   <option value="DEF">DEF</option>
@@ -181,6 +190,7 @@ function UserHome() {
                                   value={formData.TaskDescription}
                                   onChange={handleChange}
                                   id="description"
+                                  required
                                   className="block w-60 rounded-md border border-gray-300 p-2 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   placeholder="Description"
                                 />
@@ -189,10 +199,13 @@ function UserHome() {
                               <div className="project-task-description">
                                 <label htmlFor="ConsumingTimeInMin" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Task Consuming Time in Min.</label>
                                 <input
+                                  required
                                   type="number"
+
                                   name="ConsumingTimeInMin"
                                   value={formData.ConsumingTimeInMin}
                                   onChange={handleChange}
+
                                   id="ConsumingTimeInMin"
                                   className="block w-60 rounded-md border border-gray-300 p-2 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 sm:me-60"
                                   placeholder="Time in Min."
@@ -206,7 +219,7 @@ function UserHome() {
                                   // {/* Add Task Button  */ }
                                   !isUpdate ?
                                     <div className=" m-1 flex flex-col justify-end ">
-                                      <button onClick={handleSubmit} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                                      <button type="submit" className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                                         <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
                                           Add Task
                                         </span>
@@ -215,7 +228,7 @@ function UserHome() {
                                     :
                                     // {/* Task Update Button  */}
                                     <div className=" m-1 flex flex-col justify-end ">
-                                      <button type="button" onClick={() => { updateTask(), setShowModal(false) }} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-blue-900 to-blue-600 group-hover:from-red-600 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-100">
+                                      <button type="submit" className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-blue-900 to-blue-600 group-hover:from-red-600 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-100">
                                         <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
                                           Update Task
                                         </span>
@@ -224,13 +237,6 @@ function UserHome() {
 
                                 }
                                 {/* Task Clear Button */}
-                                <div className="m-1 flex flex-col justify-end">
-                                  <button type="reset" onClick={() => setFormData(defaultTaskData)} className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-red-400 to-red-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-                                    <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
-                                      Clear
-                                    </span>
-                                  </button>
-                                </div>
                               </div>
 
 
@@ -239,6 +245,13 @@ function UserHome() {
                         </div>
                       </div>
                     </form>
+                    <div className="m-1 flex flex-col justify-end">
+                      <button type="reset" onClick={() => setFormData(defaultTaskData)} className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-red-400 to-red-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                        <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
+                          Clear
+                        </span>
+                      </button>
+                    </div>
 
                   </div>
                   {/*footer*/}
@@ -264,12 +277,7 @@ function UserHome() {
         ) : null}
       </>
 
-
-
-
-
-
-          {/* Modal Button Here  */}
+      {/* Modal Button Here  */}
       <div className="container mx-auto px-4 bg-slate-200 max-w-7xl rounded p-3">
         <div className="m-2 p-2">
           <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
@@ -277,9 +285,18 @@ function UserHome() {
               Add Task
             </span>
           </button>
+          {/* Date picker calender add here  */}
+          <div className="my-4">
+            <DatePicker
+              selected={date}
+              onChange={(date) => setDate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="p-2 rounded"
+            />
+          </div>
           {/* Table task show day wise only */}
           <div>
-            <h1 className="text-2xl font-bold text-center py-3 my-2">Task Afford Report</h1>
+            <h1 className="text-2xl font-bold text-center py-3 my-2">Task Effort Report</h1>
           </div>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-white dark:text-gray">

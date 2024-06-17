@@ -4,9 +4,10 @@ const db = require('../config/db.js');
 const AddData = (req, res) => {
   console.log('here');
   const { ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin } = req.body;
+  const taskDate = new Date().toISOString().split('T')[0]; // current date 
   console.log(ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin)
-  const query = 'INSERT INTO tasks (ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin) VALUES (?, ?, ?, ?, ?)';
-  db.query(query, [ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin], (err, result) => {
+  const query = 'INSERT INTO tasks (ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date) VALUES (?, ?, ?, ?, ?, ?)';
+  db.query(query, [ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, taskDate], (err, result) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -15,7 +16,20 @@ const AddData = (req, res) => {
 }
 // Route to fetch data
 const FetchData = (req, res) => {
+  const {date} = req.query
+  const query = 'SELECT * FROM tasks WHERE task_date = ?';
+  db.query(query, [date], (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    res.json(results);
+  });
+};
+
+// fetch full task report
+const FetchFUllData = (req, res) => {
   const query = 'SELECT * FROM tasks';
+  
   db.query(query, (err, results) => {
     if (err) {
       return res.status(500).send(err);
@@ -23,6 +37,7 @@ const FetchData = (req, res) => {
     res.json(results);
   });
 };
+
 // Route to update  task details 
 const UpdateTask = (req, res) => {
   try {
@@ -77,4 +92,6 @@ module.exports = {
   FetchData,
   UpdateTask,
   DeleteTask,
+  FetchFUllData,
+
 };

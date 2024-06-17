@@ -9,22 +9,14 @@ import Footer from './components/footer';
 import UserHome from './pages/Employee/userHome';
 import TaskView from './pages/Employee/taskShow';
 import RegisterUser from './pages/Admin/registerUser';
-// import { useState } from 'react';
-
-// import { useState, useEffect } from 'react'
 
 function App() {
-  // const [Effect, SetEffect] = useState(false)
   const navigate = useNavigate();
-// setTimeout(() =>{
-//   navigate("/action");
-// }, 2000);
   const handleLogout = () => {
     console.log('Logout function called');
-    // localStorage.removeItem('user')
+    localStorage.removeItem('user')
     navigate("/")
-    // console.log('After Logout:', localStorage.getItem('user'));
-    // SetEffect(!Effect);
+
   }
 
 
@@ -38,8 +30,6 @@ function App() {
         </nav>
         {/* this section is also use main screen on landing page  */}
         <main>
-          
-          
         {/* other then use Router part user router  */}
         <Routes>
           <Route path="/" element={<LoginPage/>} />

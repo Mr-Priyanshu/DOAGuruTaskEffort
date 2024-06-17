@@ -10,6 +10,7 @@ let defaultTaskData = {
   SubCategory: '',
   TaskDescription: '',
   ConsumingTimeInMin: '',
+  task_date: '',
 }
 
 function TaskView() {
@@ -29,10 +30,11 @@ function TaskView() {
 
 
 
-  const fetchTasks = () => {
-    axios.get('http://localhost:3001/api/fetch-data')
+  const fetchFullTasks = () => {
+    axios.get('http://localhost:3001/api/fetch-full-data')
       .then(response => {
         setTaskData(response.data);
+        
         console.log(response.data)
       })
       .catch(error => {
@@ -54,7 +56,7 @@ function TaskView() {
       .then(response => {
         alert('Edit Ho gya');
         console.log(response.data);
-        fetchTasks()
+        fetchFullTasks()
         setIsUpdate(false)
       })
       .catch((err) => {
@@ -70,14 +72,14 @@ function TaskView() {
         alert('Task deleted successfully');
         axios.get('http://localhost:3001/api/get-tasks')
           .then(response => setFormData(response.data));
-        fetchTasks()
+          fetchFullTasks()
       })
       .catch(error => console.error('There was an error!', error));
   };
 
 
   useEffect(() => {
-    fetchTasks();
+    fetchFullTasks();
   }, []);
 
   return (
@@ -248,7 +250,7 @@ function TaskView() {
           <div>
             <h1 className="text-2xl font-bold text-center py-3 my-2">Task Afford Report</h1>
           </div>
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="relative mx-4 overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-white dark:text-gray">
               <thead className="text-xs text-white-900 uppercase bg-white dark:bg-gray-700 dark:text-white-400">
                 <tr>
@@ -259,6 +261,7 @@ function TaskView() {
                   <th scope="col" className="px-3 py-2">Task Description</th>
                   <th scope="col" className="px-3 py-2">Consuming time</th>
                   <th scope="col" className="px-3 py-2">Total Consuming time</th>
+                  <th scope="col" className="px-3 py-2">Task Date</th>
                   <th scope="col" className="px-3 py-2 center">Action</th>
                 </tr>
               </thead>
@@ -272,6 +275,7 @@ function TaskView() {
                     <td className="px-3 py-2">{task.TaskDescription}</td>
                     <td className="px-3 py-2">{task.ConsumingTimeInMin}</td>
                     <td className="px-3 py-2">{task.TotalConsumingTime}</td>
+                    <td className="px-3 py-2">{task.task_date}</td>
                     <td className="px-3 py-2 flex-wrap">
                       <Link to="#" onClick={() => { handleEditTask(task) }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-1">Edit</Link>
                       <Link to="#" onClick={() => handleDeleteTask(task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline px-1">Remove</Link>
