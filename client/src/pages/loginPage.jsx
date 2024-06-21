@@ -53,7 +53,8 @@ function LoginPage({setRender}) {
           localStorage.setItem('user', save);
         alert(response.data.message);
         console.log(response.data.message)
-        navigate('/registerUser')
+        setRender()
+        navigate('/Admin-Home-page')
         } else {
           console.error('Unexpected response format:', response.data);
           alert('Login successful, but user data is missing.');

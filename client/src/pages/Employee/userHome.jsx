@@ -64,9 +64,16 @@ function UserHome() {
     const formattedDate = selectedDate.toISOString().split('T')[0];
     console.log(formattedDate)
 
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+
+
     axios.get('http://localhost:3001/api/fetch-data', { params: { date: formattedDate } })
       .then(response => {
-        setTaskData(response.data);
+        let data = response.data;
+        let currentUser = data.filter((iteam) => iteam.user_id == user.id)
+        console.log(currentUser, user.id)
+        setTaskData(currentUser);
         console.log(response.data)
       })
       .catch(error => {
@@ -279,12 +286,12 @@ function UserHome() {
                                   onChange={handleChange}
 
                                   id="ConsumingTimeInMin"
-                                  className="block w-60 rounded-md border border-gray-300 p-2 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 sm:me-60"
+                                  className="block w-60 rounded-md border border-gray-300 p-2 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 sm:me-64"
                                   placeholder="Time in Min."
                                 />
                               </div>
 
-                              <div className="buttons flex justify-start sm:ms-8  ">
+                              <div className="buttons flex justify-start sm:ms-10  ">
 
                                 {
 

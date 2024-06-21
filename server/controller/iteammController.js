@@ -105,8 +105,8 @@ const ProjectsList = (req, res) => {
 
 const CategoryList = (req, res) => {
   const { projects_id } = req.query;
-  const query = 'SELECT * FROM category WHERE projects_id = ?';
-  db.query(query, [projects_id], (err, result) => {
+  const query = 'SELECT * FROM categories ';
+  db.query(query, (err, result) => {
     if (err) {
       console.error('Error fetching categories:', err);
       res.status(500).send('Error fetching categories', err);
@@ -120,7 +120,7 @@ const CategoryList = (req, res) => {
 const SubCategoryList = (req, res) => {
   const { category_id } = req.query;
   console.log(category_id)
-  const query = 'SELECT * FROM subcategory WHERE category_id = ?';
+  const query = 'SELECT * FROM subcategories WHERE category_id = ?';
 
   db.query(query, [category_id], (err, result) => {
     if (err) {
@@ -134,54 +134,6 @@ const SubCategoryList = (req, res) => {
 };
 
 // // Route to add new option(project name category subcat) by Admin side 
-const addOption = (req, res) => {
-  const { project, category, subcategory } = req.body;
-
-  const ProjectQuery = 'INSERT INTO projects (name) VALUES (?)';
-  const CategoryQuery = 'INSERT INTO category (name, projects_id) VALUES ?';
-  const SubCategoryQuery = 'INSERT INTO subcategory (name, category_id) VALUES ?';
-
-  // Insert project
-  db.query(ProjectQuery, [project], (err, projectResult) => {
-    if (err) {
-      console.error('Error in project query:', err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
-    const projectId = projectResult.insertId;
-
-    // Prepare category values
-    const categoryValues = category.map(cat => [cat, projectId]);
-
-    // Insert categories
-    db.query(CategoryQuery, [categoryValues], (err, categoryResult) => {
-      if (err) {
-        console.error('Error inserting categories:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-      }
-
-      // Extract category IDs
-      const categoryIds = categoryResult.insertId;
-
-      // Prepare subcategory values
-      const subcategoryValues = subcategory.map((subcat, index) => [subcat, categoryIds]);
-
-      // Insert subcategories
-      db.query(SubCategoryQuery, [subcategoryValues], (err, subcategoryResult) => {
-        if (err) {
-          console.error('Error inserting subcategories:', err);
-          return res.status(500).json({ error: 'Internal server error' });
-        }
-
-        console.log('Subcategories inserted successfully.');
-        res.status(200).json({ message: 'Project, categories, and subcategories inserted successfully.' });
-      });
-
-      console.log('Categories inserted successfully.');
-    });
-
-    console.log('Project inserted successfully.');
-  });
-};
 
 
 
@@ -202,15 +154,57 @@ const addOption = (req, res) => {
         res.status(200).json(result);
       })
     }
+
+
+    // Add new project
+const AddProject = (req, res) => {
+  const { name } = req.body;
+  const query = 'INSERT INTO projects (name) VALUES (?)';
+  db.query(query, [name], (err, results) => {
+      if (err) {
+          return res.status(500).send(err);
+      }
+      res.status(201).json({ message: 'Project added successfully', id: results.insertId });
+  });
+};
+
+// Add new category
+const AddCategory = (req, res) => {
+  const { name } = req.body;
+  const query = 'INSERT INTO categories (name) VALUES (?)';
+  db.query(query, [name], (err, results) => {
+      if (err) {
+          return res.status(500).send(err);
+      }
+      res.status(201).json({ message: 'Category added successfully', id: results.insertId });
+  });
+};
+
+// Add new subcategory
+const AddSubcategory = (req, res) => {
+  const { name, category_id } = req.body;
+  const query = 'INSERT INTO subcategories (name, category_id) VALUES (?, ?)';
+  db.query(query, [name, category_id], (err, results) => {
+      if (err) {
+          return res.status(500).send(err); 
+      }
+      res.status(201).json({ message: 'Subcategory added successfully', id: results.insertId });
+  });
+};
+
+
+
     module.exports = {
       AddData,
       FetchData,
       UpdateTask,
       DeleteTask,
       FetchFUllData,
-      addOption,
       ProjectsList,
       CategoryList,
       SubCategoryList,
       myTask,
+      AddProject,
+      AddCategory,
+      AddSubcategory,
     };

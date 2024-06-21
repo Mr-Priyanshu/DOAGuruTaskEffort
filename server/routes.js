@@ -4,11 +4,14 @@ const {
   FetchData,
   UpdateTask,
   FetchFUllData,
-  addOption,
+
   ProjectsList,
   CategoryList,
   SubCategoryList,
   myTask,
+  AddCategory,
+  AddSubcategory,
+  AddProject,
 } = require('./controller/iteammController');
 const {
   UserLogin,
@@ -44,7 +47,11 @@ router.get('/api/category-list', CategoryList);
 router.get('/api/sub-category-list', SubCategoryList);
 
 // Route for  Add project and categeory 
-router.post('/api/add-option', addOption);
+router.post('/api/projects', AddProject );
+
+router.post('/api/categories', AddCategory )
+
+router.post('/api/subcategories', AddSubcategory)
 
 // Admin Routes 
 router.post('/api/admin-login', AdminLogin)
