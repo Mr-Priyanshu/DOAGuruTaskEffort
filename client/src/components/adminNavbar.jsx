@@ -1,8 +1,6 @@
 import CLogo from "../assets/images/CLogo.png"
 import { Link } from "react-router-dom"
 
-
-
 import {
   Disclosure,
   DisclosureButton,

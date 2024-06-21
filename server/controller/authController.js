@@ -22,7 +22,9 @@ const UserLogin = (req, res) => {
 
     }
     if (result.length > 0) {
-      res.send({ message: 'User Successful', user: result[0] });
+      res.send({ 
+        message: 'User Successful Login ', user: result[0] 
+      });
     }
     else {
       res.status(401).send({ message: 'Invalid credentials' });

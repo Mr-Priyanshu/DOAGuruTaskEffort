@@ -18,9 +18,21 @@ function UserHome() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [formData, setFormData] = useState(defaultTaskData);
   const [date, setDate] = useState(new Date());
-
-
+  
   const [taskData, setTaskData] = useState([]);
+
+  // Dropdown List select in task time use state 
+  const [projects, setProjects] = useState([]);
+  const [categorys, setCategory] = useState([]);
+  const [subCategorys, setSubCategory] = useState([]);
+
+  const [selectedProjects, setSelectedProjects] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+
+  let user = localStorage.getItem('user');
+  user = JSON.parse(user);
+  // console.log(user);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,12 +40,14 @@ function UserHome() {
       [name]: value
     });
   };
-
+  // Task Add Form handle   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData)
+    // let user = localStorage.getItem('user');
+    // user = JSON.parse(user);
+    console.log(user);
 
-    axios.post('http://localhost:3001/api/add-data', formData)
+    axios.post('http://localhost:3001/api/add-data', { user_id: user.id, ...formData })
 
       .then(response => {
         alert('Data saved successfully Ho gya he');
@@ -44,8 +58,7 @@ function UserHome() {
       });
     setFormData(defaultTaskData)
   };
-
-
+  // FetchTask by Date 
   const fetchTasks = (selectedDate) => {
     // console.log(selectedDate)
     const formattedDate = selectedDate.toISOString().split('T')[0];
@@ -60,7 +73,7 @@ function UserHome() {
         console.error('There was an error!', error);
       });
   };
-
+  // Edit Task handle 
   const handleEditTask = (task) => {
     setIsUpdate(true)
     console.log(task);
@@ -69,13 +82,14 @@ function UserHome() {
     console.log(formData)
 
   }
+  // Update Task Handle 
   const updateTask = (e) => {
     console.log("A gya ")
     axios.post('http://localhost:3001/api/update-task', formData)
       .then(response => {
         alert('Edit Ho gya task');
         console.log(response.data);
-        fetchTasks()
+        fetchTasks(date)
         setIsUpdate(false)
         setShowModal(false)
       })
@@ -84,21 +98,82 @@ function UserHome() {
       })
     setFormData(defaultTaskData)
   }
-
-
+  // Remove Task handle 
   const handleDeleteTask = (id) => {
     axios.post('http://localhost:3001/api/delete-task', { id })
       .then(response => {
         alert('Task ko remove kr diya mene');
         axios.get('http://localhost:3001/api/get-tasks')
           .then(response => setFormData(response.data));
-        fetchTasks()
+        fetchTasks(date)
       })
       .catch(error => console.error('There was an error!', error));
   };
 
+  // fetc and add select filed and category option 
+  const fetchProjectListData = () => {
+    axios.get('http://localhost:3001/api/projects')
+      .then(response => {
+        console.log(response.data)
+        setProjects(response.data);
+      })
+      .catch(error => {
+        console.error("There was an error fetching the projects!", error);
+      });
+  };
+
+  // dropdown list for add task 
+
+  // 
+  
+  const handleProjectsChange = (e) => {
+    const projectId = e.target.value;
+    setSelectedProjects(projectId);
+    setFormData({
+      ...formData,
+      ProjectOrClientName: projectId
+    });
+  
+    axios.get(`http://localhost:3001/api/category-list?projects_id=${projectId}`)
+      .then(response => {
+        setCategory(response.data);
+        setSubCategory([]);
+        setSelectedCategory('');
+      })
+      .catch(error => {
+        console.error("There was an error fetching the categories!", error);
+      });
+  };
+  
+  const handleCategoryChange = (e) => {
+    const categoryValue = e.target.value; // category name
+    
+    setSelectedCategory(categoryValue);
+    setFormData({
+      ...formData,
+      Category: categoryValue,
+     
+    });
+    console.log(categorys); // array of object hai jisme categories hai us projec  tki 
+
+    const CurrentCategory = categorys.find((ele) => ele.name == categoryValue); 
+    // us category ke name ko is azrray of obje mai dhundh jba wo mil gaya to ye return karta hai wah object ki full detail
+    // jisme id bhi hoti hai 
+
+    console.log('Current Cateogry', CurrentCategory);
+    axios.get(`http://localhost:3001/api/sub-category-list?category_id=${CurrentCategory.id}`)
+    
+      .then(response => {
+        setSubCategory(response.data);
+        console.log('SubC', response.data)
+      })
+      .catch(error => {
+        console.error("There was an error fetching the sub-categories!", error);
+      });
+  };
 
   useEffect(() => {
+    fetchProjectListData()
     fetchTasks(date);
   }, [date]);
 
@@ -124,7 +199,7 @@ function UserHome() {
                   {/*header*/}
                   <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                     <h3 className="text-3xl font-semibold center">
-                      Add Today Afford Tasks
+                      Add Today Effort Tasks
                     </h3>
                     <button
                       className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
@@ -151,35 +226,32 @@ function UserHome() {
                               {/* Client and Project  Name Select  */}
                               <div className="project-client-name">
                                 <label htmlFor="ProjectClient" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Project / Client Name</label>
-                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
-                                  <option>Choose a ProjectOrClientName</option>
-                                  <option value="ABC">ABC</option>
-                                  <option value="DEF">DEF</option>
-                                  <option value="GHI">GHI</option>
-                                  <option value="JKL">JKL</option>
+                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleProjectsChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                  <option value="">Choose a ProjectOrClientName</option>
+                                  {projects.map(project => (
+                                    <option key={project.id} value={project.id}>{project.name}</option>
+                                  ))}
                                 </select>
                               </div>
                               {/* Project and Client work task category select  */}
                               <div className="project-task-category">
                                 <label htmlFor="Category" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Category</label>
-                                <select id="Category" required name="Category" value={formData.Category} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
-                                  <option>Choose a Category</option>
-                                  <option value="ABC">ABC</option>
-                                  <option value="DEF">DEF</option>
-                                  <option value="GHI">GHI</option>
-                                  <option value="JKL">JKL</option>
+                                <select id="Category" required name="Category" value={formData.Category} onChange={handleCategoryChange} disabled={!selectedProjects} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                  <option value="">Choose a Category</option>
+                                  {categorys.map(category => (
+                                    <option key={category.id} value={category.name}>{category.name}</option>
+                                  ))}
                                 </select>
                               </div>
                               {/* After category select sub category under category section  */}
                               <div className="project-task-sub-category">
                                 <label htmlFor="SubCategory" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Sub-Category</label>
-                                <select id="SubCategory" required name="SubCategory" value={formData.SubCategory} onChange={handleChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
-                                  <option>Choose a Sub-category</option>
-                                  <option value="ABC">ABC</option>
-                                  <option value="DEF">DEF</option>
-                                  <option value="GHI">GHI</option>
-                                  <option value="JKL">JKL</option>
-                                </select>
+                                <select id="SubCategory" required name="SubCategory" value={formData.SubCategory} onChange={handleChange} disabled={!selectedCategory} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                  <option value="">Choose a Sub-Category</option>
+                                  {subCategorys.map(subCategory => (
+                                    <option key={subCategory.id} value={subCategory.id}>{subCategory.name}</option>
+                                  ))}
+                                </select> 
                               </div>
                               {/* Add task description manually */}
                               <div className="project-task-description">
@@ -280,19 +352,23 @@ function UserHome() {
       {/* Modal Button Here  */}
       <div className="container mx-auto px-4 bg-slate-200 max-w-7xl rounded p-3">
         <div className="m-2 p-2">
-          <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-            <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
-              Add Task
-            </span>
-          </button>
-          {/* Date picker calender add here  */}
-          <div className="my-4">
-            <DatePicker
-              selected={date}
-              onChange={(date) => setDate(date)}
-              dateFormat="yyyy-MM-dd"
-              className="p-2 rounded"
-            />
+          <div className=" flex justify-between items-center">
+            <div className=" ">
+              <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
+                  Add Task
+                </span>
+              </button>
+            </div>
+            {/* Date picker calender add here  */}
+            <div className="my-1  ">
+              <DatePicker
+                selected={date}
+                onChange={(date) => setDate(date)}
+                dateFormat="yyyy-MM-dd"
+                className="p-2 rounded-lg w-28 border-2 border-sky-900"
+              />
+            </div>
           </div>
           {/* Table task show day wise only */}
           <div>

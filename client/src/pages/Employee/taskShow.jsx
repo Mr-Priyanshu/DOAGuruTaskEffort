@@ -77,9 +77,24 @@ function TaskView() {
       .catch(error => console.error('There was an error!', error));
   };
 
+  const myTask = () => {
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+    // console.log(user);
+    axios.get(`http://localhost:3001/api/mytask/${user.id}`)
+    .then(res => {
+      // console.log(res.data)
+      setTaskData(res.data);
+    })
+    .catch(error => {
+            console.error('There was an error!', error);
+      });
+  }
+
 
   useEffect(() => {
-    fetchFullTasks();
+    // fetchFullTasks();
+    myTask();
   }, []);
 
   return (
@@ -248,7 +263,7 @@ function TaskView() {
 
           {/* Table task show day wise only */}
           <div>
-            <h1 className="text-2xl font-bold text-center py-3 my-2">Task Afford Report</h1>
+            <h1 className="text-2xl font-bold text-center py-3 my-2">Task Effort Report</h1>
           </div>
           <div className="relative mx-4 overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-white dark:text-gray">

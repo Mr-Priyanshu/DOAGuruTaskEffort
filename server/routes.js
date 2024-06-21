@@ -4,17 +4,19 @@ const {
   FetchData,
   UpdateTask,
   FetchFUllData,
+  addOption,
+  ProjectsList,
+  CategoryList,
+  SubCategoryList,
+  myTask,
 } = require('./controller/iteammController');
 const {
   UserLogin,
   UserRegister,
   AdminLogin
-  
 } = require('./controller/authController');
-
 const express = require('express');
 const router = express.Router();
-
 
 
 // Route to add data
@@ -33,12 +35,19 @@ router.post('/api/register', UserRegister);
 router.post('/api/login', UserLogin);
 // Router to Logout user 
 // router.post('/api/logout', UserLogout);
+// Route for user show only self add task 
+router.get('/api/mytask/:id', myTask)
+
+// slect filed routes 
+router.get('/api/projects', ProjectsList);
+router.get('/api/category-list', CategoryList);
+router.get('/api/sub-category-list', SubCategoryList);
+
+// Route for  Add project and categeory 
+router.post('/api/add-option', addOption);
 
 // Admin Routes 
 router.post('/api/admin-login', AdminLogin)
-
-
-
 
 
 module.exports = router;

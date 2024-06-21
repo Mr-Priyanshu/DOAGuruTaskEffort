@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
 import CLogo from "../assets/images/CLogo.png"
-
-
-
-
 function Footer() {
-
   return (
     <>
       <footer className="bg-white rounded-lg shadow dark:bg-white-900 m-4">
@@ -13,7 +8,7 @@ function Footer() {
           <div className="sm:flex sm:items-center sm:justify-between">
             <Link to="https://doaguru.com/" target="_blank" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
               <img src={CLogo} className="h-8" alt="Flowbite Logo" />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">DOAGuru Infosystem</span>
+              <span className="self-center text-2xl text-slate-400  font-semibold whitespace-nowrap ">DOAGuru Infosystem</span>
             </Link>
             <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
               <li>
@@ -31,17 +26,12 @@ function Footer() {
             </ul>
           </div>
           <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-          <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <Link to="https://doaguru.com/" className="hover:underline" target="_blank">DOAGuru Infosystem</Link>. All Rights Reserved.</span>
+          <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <Link to="https://doaguru.com/" className="hover:underline text-slate-400 " target="_blank">DOAGuru Infosystem</Link>. All Rights Reserved.</span>
         </div>
-
-
       </footer>
-
-
     </>
   );
 }
-
 export default Footer;
 
 

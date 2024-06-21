@@ -3,7 +3,8 @@ import CLogo from "../assets/images/CLogo.png"
 import React, { useState } from "react"
 import axios from "axios"
 
-function LoginPage() {
+// eslint-disable-next-line react/prop-types
+function LoginPage({setRender}) {
   const [showModal, setShowModal] = React.useState(false);
 
   const [emailId, setEmailId] = useState('');
@@ -22,7 +23,9 @@ function LoginPage() {
           localStorage.setItem('user', save);
         alert(response.data.message);
         console.log(response.data.message)
+        setRender();
         navigate('/UserHome')
+
         } else {
           console.error('Unexpected response format:', response.data);
           alert('Login successful, but user data is missing.');
