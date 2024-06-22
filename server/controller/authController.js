@@ -23,7 +23,13 @@ const UserLogin = (req, res) => {
     }
     if (result.length > 0) {
       res.send({ 
-        message: 'User Successful Login ', user: result[0] 
+        message: `सफल लॉगिन
+
+आपका लॉगिन सफल रहा है। आपका स्वागत है! 
+
+धन्यवाद!
+
+`, user: result[0] 
       });
     }
     else {
@@ -60,7 +66,7 @@ const AdminLogin = (req, res) => {
 
     }
     if (result.length > 0) {
-      res.send({ message: 'User Successful', user: result[0] });
+      res.send({ message: 'एडमिन का लॉगिन सफलतापूर्वक हो गया है।', user: result[0] });
     }
     else {
       res.status(401).send({ message: 'Invalid credentials' });

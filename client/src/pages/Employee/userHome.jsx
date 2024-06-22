@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from "react-datepicker"
 import 'react-datepicker/dist/react-datepicker.css';
+import cogoToast from 'cogo-toast';
 
 
 let defaultTaskData = {
@@ -50,7 +51,7 @@ function UserHome() {
     axios.post('http://localhost:3001/api/add-data', { user_id: user.id, ...formData })
 
       .then(response => {
-        alert('Data saved successfully Ho gya he');
+        cogoToast.success('आपका टास्क सफलतापूर्वक जोड़ दिया गया है।');
         fetchTasks(date);  // Fetch updated tasks after adding new data
       })
       .catch(error => {
@@ -91,12 +92,14 @@ function UserHome() {
   }
   // Update Task Handle 
   const updateTask = (e) => {
+    e.preventDefault()
+
     console.log("A gya ")
     axios.post('http://localhost:3001/api/update-task', formData)
       .then(response => {
-        alert('Edit Ho gya task');
-        console.log(response.data);
         fetchTasks(date)
+        cogoToast.success('आपका टास्क संपादित हो गया है।');
+        console.log(response.data);
         setIsUpdate(false)
         setShowModal(false)
       })
@@ -236,7 +239,7 @@ function UserHome() {
                                 <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleProjectsChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a ProjectOrClientName</option>
                                   {projects.map(project => (
-                                    <option key={project.id} value={project.id}>{project.name}</option>
+                                    <option key={project.id} value={project.name}>{project.name}</option>
                                   ))}
                                 </select>
                               </div>
@@ -256,7 +259,7 @@ function UserHome() {
                                 <select id="SubCategory" required name="SubCategory" value={formData.SubCategory} onChange={handleChange} disabled={!selectedCategory} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a Sub-Category</option>
                                   {subCategorys.map(subCategory => (
-                                    <option key={subCategory.id} value={subCategory.id}>{subCategory.name}</option>
+                                    <option key={subCategory.id} value={subCategory.name}>{subCategory.name}</option>
                                   ))}
                                 </select> 
                               </div>

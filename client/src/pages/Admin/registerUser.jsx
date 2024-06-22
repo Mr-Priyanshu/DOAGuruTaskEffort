@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 
 
+
+
 const RegisterUser = () => {
     const [formData, setFormData] = useState({
         fullName: '',
@@ -38,7 +40,7 @@ const RegisterUser = () => {
                     <input type="email" name="emailId" placeholder="Email ID" onChange={handleChange} required className='m-2 p-3 border border-cyan-600 rounded-lg' />
                     <input type="text" name="designation" placeholder="Designation" onChange={handleChange} required className='m-2 p-3 border border-cyan-600 rounded-lg' />
                     <input type="text" name="password" placeholder="Password" onChange={handleChange} required className='m-2 p-3 border border-cyan-600 rounded-lg' />
-                    <button type="submit" className='m-2 p-3  border border-cyan-600 rounded-lg hover:bg-cyan-100 font-bold '>Register</button>
+                    <button type="submit" onClick={() => setFormData()} className='m-2 p-3  border border-cyan-600 rounded-lg hover:bg-cyan-100 font-bold '>Register</button>
                 </form>
             </div>
         </div>

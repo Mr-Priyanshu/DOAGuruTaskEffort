@@ -292,7 +292,7 @@ function TaskView() {
                     <td className="px-3 py-2">{task.TotalConsumingTime}</td>
                     <td className="px-3 py-2">{task.task_date}</td>
                     <td className="px-3 py-2 flex-wrap">
-                      <Link to="#" onClick={() => { handleEditTask(task) }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-1">Edit</Link>
+                      {/* <Link to="#" onClick={() => { handleEditTask(task) }} dis className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-1">Edit</Link> */}
                       <Link to="#" onClick={() => handleDeleteTask(task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline px-1">Remove</Link>
                     </td>
                   </tr>

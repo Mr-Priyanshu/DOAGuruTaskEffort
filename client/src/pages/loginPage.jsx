@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import CLogo from "../assets/images/CLogo.png"
 import React, { useState } from "react"
 import axios from "axios"
+import cogoToast from 'cogo-toast';
 
 // eslint-disable-next-line react/prop-types
 function LoginPage({setRender}) {
@@ -21,22 +22,22 @@ function LoginPage({setRender}) {
           let save = response.data.user;
           save = JSON.stringify(save);
           localStorage.setItem('user', save);
-        alert(response.data.message);
-        console.log(response.data.message)
-        setRender();
-        navigate('/UserHome')
+          cogoToast.success(response.data.message);
+          console.log(response.data.message)
+          setRender();
+          navigate('/UserHome')
 
         } else {
           console.error('Unexpected response format:', response.data);
-          alert('Login successful, but user data is missing.');
+          cogoToast.warn('Login successful, but user data is missing.');
         }
       })
       .catch(error => {
         if (error.response && error.response.data && error.response.data.message) {
-          alert(error.response.data.message);
+          cogoToast.info(error.response.data.message);
           console.log(error.response.data.message);
         } else {
-          alert('Login failed: an unknown error occurred');
+          cogoToast.warn('Login failed: an unknown error occurred');
           console.log('Error details:', error);
         }
       });
@@ -51,21 +52,21 @@ function LoginPage({setRender}) {
           let save = response.data.user;
           save = JSON.stringify(save);
           localStorage.setItem('user', save);
-        alert(response.data.message);
-        console.log(response.data.message)
+        
+        cogoToast.success(response.data.message);
         setRender()
         navigate('/Admin-Home-page')
         } else {
           console.error('Unexpected response format:', response.data);
-          alert('Login successful, but user data is missing.');
+          cogoToast.warn('Login successful, but user data is missing.');
         }
       })
       .catch(error => {
         if (error.response && error.response.data && error.response.data.message) {
-          alert(error.response.data.message);
+          cogoToast.info(error.response.data.message);
           console.log(error.response.data.message);
         } else {
-          alert('Login failed: an unknown error occurred');
+          cogoToast.warn('Login failed: an unknown error occurred');
           console.log('Error details:', error);
         }
       });
