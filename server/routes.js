@@ -12,7 +12,13 @@ const {
   AddCategory,
   AddSubcategory,
   AddProject,
+  UserData,
+  projectFromAssign,
+  assignProject,
+  getUserTasks,
+  DownloadUserTaskReport,
 } = require('./controller/iteammController');
+
 const {
   UserLogin,
   UserRegister,
@@ -26,7 +32,7 @@ const router = express.Router();
 router.post('/api/add-data', AddData);
 // Route to fetch data
 router.get('/api/fetch-data', FetchData);
-// this route for fetch full task report
+// this route for fetch full all user  task report
 router.get('/api/fetch-full-data', FetchFUllData);
 //  Update Task Details 
 router.post('/api/update-task', UpdateTask);
@@ -39,7 +45,7 @@ router.post('/api/login', UserLogin);
 // Router to Logout user 
 // router.post('/api/logout', UserLogout);
 // Route for user show only self add task 
-router.get('/api/mytask/:id', myTask)
+router.get('/api/mytask/:id', myTask);
 
 // slect filed routes 
 router.get('/api/projects', ProjectsList);
@@ -49,12 +55,25 @@ router.get('/api/sub-category-list', SubCategoryList);
 // Route for  Add project and categeory 
 router.post('/api/projects', AddProject );
 
-router.post('/api/categories', AddCategory )
+router.post('/api/categories', AddCategory );
 
-router.post('/api/subcategories', AddSubcategory)
+router.post('/api/subcategories', AddSubcategory);
 
 // Admin Routes 
-router.post('/api/admin-login', AdminLogin)
+router.post('/api/admin-login', AdminLogin);
+
+//User Data Fetch
+
+router.get('/api/users',UserData);
+router.get('/api/getProject/:user_id',projectFromAssign);
+router.post('/api/assignProject',assignProject);
+
+// Employee Task Show to admin 
+router.get('/api/getUserTasks/:userId', getUserTasks);
+
+// Downnload User task in excel 
+
+router.get('/api/downloadUserTasks/:userId', DownloadUserTaskReport)
 
 
 module.exports = router;

@@ -19,6 +19,9 @@ function UserHome() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [formData, setFormData] = useState(defaultTaskData);
   const [date, setDate] = useState(new Date());
+  const [allProject, setAllProject] = useState([]);
+  const [allCategory, setAllCategory] = useState([]);
+  const [userProject, setUserProject] = useState([]);
   
   const [taskData, setTaskData] = useState([]);
 
@@ -88,7 +91,6 @@ function UserHome() {
     setFormData(task)
     setShowModal(true)
     console.log(formData)
-
   }
   // Update Task Handle 
   const updateTask = (e) => {
@@ -120,35 +122,93 @@ function UserHome() {
       .catch(error => console.error('There was an error!', error));
   };
 
+
+
   // fetc and add select filed and category option 
   const fetchProjectListData = () => {
     axios.get('http://localhost:3001/api/projects')
       .then(response => {
         console.log(response.data)
-        setProjects(response.data);
+        setAllProject(response.data);
       })
       .catch(error => {
         console.error("There was an error fetching the projects!", error);
       });
   };
 
+  const particularProject = () => {
+    axios.get(`http://localhost:3001/api/getProject/${user.id}`)
+      .then(response => {
+        console.log(response.data);
+        const particular_project = response.data; // Assuming response.data is an array of objects with project IDs
+        setUserProject(particular_project);
+        // console.log(allProject);
+
+        // setAllCat(particular_project);
+        
+        // Assuming allProject is your array of all project details
+  
+        const matchedProjects = [];
+        // const matchedCategory = [];
+        // Loop through each project in particular_project
+        particular_project.forEach(particular => {
+          // Find corresponding project details in allProject
+          console.log(allProject);
+          const match = allProject.find(project => project.id == particular.project_id);
+          if (match) {
+            matchedProjects.push(match);
+          }
+        });
+        console.log(matchedProjects);
+        // Assuming setProjects is a function to update state with matchedProjects
+        setProjects(matchedProjects);
+        handleProjectsChange();
+      })
+      .catch(error => {
+        console.error("There was an error fetching the projects!", error);
+      });
+  };
+  
+
   // dropdown list for add task 
 
-  // 
-  
-  const handleProjectsChange = (e) => {
-    const projectId = e.target.value;
+  const particularCategory = () => {
+    console.log(allCategory);
+    console.log(userProject);
+    let matchedCate = [];
+    userProject.forEach(particular => {
+      // Find corresponding project details in allProject
+      console.log(allProject);
+      const match = allCategory.find(project => project.id == particular.category_id);
+      if (match) {
+        matchedCate.push(match);
+      }
+    });
+    console.log(matchedCate);
+    setCategory(matchedCate);
+    // allproject
+    // allcatgory
+    // userproject
+   // setCategory(response.data);
+    
+
+  };
+
+  const handleProjectsChange = () => {
+    const projectId = 1;
     setSelectedProjects(projectId);
     setFormData({
       ...formData,
       ProjectOrClientName: projectId
     });
-  
     axios.get(`http://localhost:3001/api/category-list?projects_id=${projectId}`)
       .then(response => {
-        setCategory(response.data);
+        setAllCategory(response.data);
+        particularCategory();
+        // setCategory(response.data);
         setSubCategory([]);
         setSelectedCategory('');
+
       })
       .catch(error => {
         console.error("There was an error fetching the categories!", error);
@@ -164,15 +224,12 @@ function UserHome() {
       Category: categoryValue,
      
     });
-    console.log(categorys); // array of object hai jisme categories hai us projec  tki 
-
+    console.log(categorys); // array of object hai jisme categories hai us projec  tki
     const CurrentCategory = categorys.find((ele) => ele.name == categoryValue); 
     // us category ke name ko is azrray of obje mai dhundh jba wo mil gaya to ye return karta hai wah object ki full detail
     // jisme id bhi hoti hai 
-
     console.log('Current Cateogry', CurrentCategory);
     axios.get(`http://localhost:3001/api/sub-category-list?category_id=${CurrentCategory.id}`)
-    
       .then(response => {
         setSubCategory(response.data);
         console.log('SubC', response.data)
@@ -203,7 +260,7 @@ function UserHome() {
             <div
               className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
-              <div className="relative w-auto my-6 mx-3 max-w-3xl">
+              <div className="relative w-auto my-6 mx-3 max-w-4xl">
                 {/*content*/}
                 <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                   {/*header*/}
@@ -225,18 +282,18 @@ function UserHome() {
                   {/*body*/}
                   <div className="relative p-6 flex-auto">
 
-                    <form onSubmit={!isUpdate ? handleSubmit : updateTask}>
                       <div className="container mx-auto px-4 bg-slate-200 max-w-7xl rounded p-3">
                         <div className="m-2 p-2 border border-white rounded-lg">
+                    <form onSubmit={!isUpdate ? handleSubmit : updateTask}>
                           {/* <div>
                               <h2 className="text-2xl font-bold text-center py-3 my-2">Add Today Afford Tasks</h2>
                             </div> */}
                           <div className="task-box-1 flex">
-                            <div className="max-w-7xl mx-auto flex  justify-center min-[320px]:flex-wrap gap-5">
+                            <div className="max-w-7xl mx-auto flex  justify-start min-[320px]:flex-wrap gap-5">
                               {/* Client and Project  Name Select  */}
                               <div className="project-client-name">
                                 <label htmlFor="ProjectClient" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Project / Client Name</label>
-                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleProjectsChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={particularCategory} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a ProjectOrClientName</option>
                                   {projects.map(project => (
                                     <option key={project.id} value={project.name}>{project.name}</option>
@@ -264,7 +321,7 @@ function UserHome() {
                                 </select> 
                               </div>
                               {/* Add task description manually */}
-                              <div className="project-task-description">
+                              <div className="project-task-description" style={{width:"600%", maxWidth:"48rem", minWidth:"15rem"}}> 
                                 <label htmlFor="Description" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Enter Task Description</label>
                                 <textarea
                                   type="text"
@@ -273,8 +330,9 @@ function UserHome() {
                                   onChange={handleChange}
                                   id="description"
                                   required
-                                  className="block w-60 rounded-md border border-gray-300 p-2 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block rounded-md border border-gray-300 p-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text- w-full gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   placeholder="Description"
+                                
                                 />
                               </div>
                               {/* Enter time in minutes  */}
@@ -301,7 +359,7 @@ function UserHome() {
                                   // {/* Add Task Button  */ }
                                   !isUpdate ?
                                     <div className=" m-1 flex flex-col justify-end ">
-                                      <button type="submit" className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                                      <button  type="submit" className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                                         <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
                                           Add Task
                                         </span>
@@ -324,16 +382,16 @@ function UserHome() {
 
                             </div>
                           </div>
-                        </div>
-                      </div>
                     </form>
                     <div className="m-1 flex flex-col justify-end">
-                      <button type="reset" onClick={() => setFormData(defaultTaskData)} className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-red-400 to-red-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                      <button type="reset" onClick={() => setFormData(defaultTaskData)} className="relative w-max	 inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-red-400 to-red-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                         <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
                           Clear
                         </span>
                       </button>
                     </div>
+                        </div>
+                      </div>
 
                   </div>
                   {/*footer*/}
@@ -364,7 +422,7 @@ function UserHome() {
         <div className="m-2 p-2">
           <div className=" flex justify-between items-center">
             <div className=" ">
-              <button onClick={() => setShowModal(true)} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+              <button onClick={() => {setShowModal(true), particularProject();}} className="relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-sm font-medium text-black-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-black focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                 <span className="relative px-5 py-1 transition-all ease-in duration-75 bg-white dark:bg-white-900 rounded-md group-hover:bg-opacity-0">
                   Add Task
                 </span>

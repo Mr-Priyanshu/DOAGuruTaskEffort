@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+
 Link
 
 
@@ -9,7 +10,7 @@ function AdminHomePage() {
       <div className="container m-3 p3 flex justify-center ">
         <div >
           <div className='m-2 p-3 flex m-auto justify-center ' >
-            <img src="https://cdn.dribbble.com/users/1117770/screenshots/2626626/welcome.gif" alt="" />
+            <img src="https://doaguru.com/static/media/doagurulogo-removebg.b0126812bbe704a27f8f.webp" alt="" />
           </div>
         </div>
 

@@ -16,6 +16,8 @@ import EmployeePage from './pages/Admin/Employees';
 import RegisterUser from './pages/Admin/registerUser';
 import ProjectsPage from './pages/Admin/projects';
 import AddData from './pages/Admin/Addprojects';
+import ProjectAssignmentForm from './pages/Admin/assignProoject';
+import TaskReportDownload from './pages/Admin/Report';
 
 function App() {
   const [render, setRender] = useState(false);
@@ -68,6 +70,8 @@ function App() {
             <Route path="/registerUser" element={<RegisterUser/>} />
             <Route path="project-add" element={<ProjectsPage/>} />
             <Route path="/AddProject" element={<AddData/>} />
+            <Route path="/assign-projects" element={<ProjectAssignmentForm/>} />
+            <Route path="/Employee-report" element={<TaskReportDownload/>} />
 
           </Routes>
         </main>

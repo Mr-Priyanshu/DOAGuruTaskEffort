@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "cogo-toast": "^4.2.3"
+    "axios": "^1.7.2",
+    "cogo-toast": "^4.2.3",
+    "exceljs": "^4.4.0"
   }
 }
