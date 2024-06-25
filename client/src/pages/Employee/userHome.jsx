@@ -185,22 +185,18 @@ function UserHome() {
       }
     });
     console.log(matchedCate);
-    setCategory(matchedCate);
-    // allproject
-    // allcatgory
-    // userproject
-   // setCategory(response.data);
-    
+    setCategory(matchedCate);  
 
   };
 
-  const handleProjectsChange = () => {
-    const projectId = 1;
+  const handleProjectsChange = (e) => {
+    const projectId = e.target.value;
     setSelectedProjects(projectId);
     setFormData({
       ...formData,
       ProjectOrClientName: projectId
     });
+    console.log(projectId)
     axios.get(`http://localhost:3001/api/category-list?projects_id=${projectId}`)
       .then(response => {
         setAllCategory(response.data);
@@ -293,10 +289,10 @@ function UserHome() {
                               {/* Client and Project  Name Select  */}
                               <div className="project-client-name">
                                 <label htmlFor="ProjectClient" className="block mb-2 text-sm font-medium text-black-900 dark:text-black">Select Project / Client Name</label>
-                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={particularCategory} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
+                                <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleProjectsChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a ProjectOrClientName</option>
                                   {projects.map(project => (
-                                    <option key={project.id} value={project.name}>{project.name}</option>
+                                    <option key={project.id} value={project.id}>{project.name}</option>
                                   ))}
                                 </select>
                               </div>
@@ -306,7 +302,7 @@ function UserHome() {
                                 <select id="Category" required name="Category" value={formData.Category} onChange={handleCategoryChange} disabled={!selectedProjects} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a Category</option>
                                   {categorys.map(category => (
-                                    <option key={category.id} value={category.name}>{category.name}</option>
+                                    <option key={category.id} value={category.id}>{category.name}</option>
                                   ))}
                                 </select>
                               </div>
@@ -316,7 +312,7 @@ function UserHome() {
                                 <select id="SubCategory" required name="SubCategory" value={formData.SubCategory} onChange={handleChange} disabled={!selectedCategory} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a Sub-Category</option>
                                   {subCategorys.map(subCategory => (
-                                    <option key={subCategory.id} value={subCategory.name}>{subCategory.name}</option>
+                                    <option key={subCategory.id} value={subCategory.id}>{subCategory.name}</option>
                                   ))}
                                 </select> 
                               </div>

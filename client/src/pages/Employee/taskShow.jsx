@@ -274,8 +274,8 @@ function TaskView() {
                   <th scope="col" className="px-3 py-2">Category</th>
                   <th scope="col" className="px-3 py-2">Sub-Category</th>
                   <th scope="col" className="px-3 py-2">Task Description</th>
-                  <th scope="col" className="px-3 py-2">Consuming time</th>
-                  <th scope="col" className="px-3 py-2">Total Consuming time</th>
+                  <th scope="col" className="px-3 py-2">Consuming time in min</th>
+                
                   <th scope="col" className="px-3 py-2">Task Date</th>
                   <th scope="col" className="px-3 py-2 center">Action</th>
                 </tr>
@@ -289,7 +289,7 @@ function TaskView() {
                     <td className="px-3 py-2">{task.SubCategory}</td>
                     <td className="px-3 py-2">{task.TaskDescription}</td>
                     <td className="px-3 py-2">{task.ConsumingTimeInMin}</td>
-                    <td className="px-3 py-2">{task.TotalConsumingTime}</td>
+                   
                     <td className="px-3 py-2">{task.task_date}</td>
                     <td className="px-3 py-2 flex-wrap">
                       {/* <Link to="#" onClick={() => { handleEditTask(task) }} dis className="font-medium text-blue-600 dark:text-blue-500 hover:underline px-1">Edit</Link> */}
