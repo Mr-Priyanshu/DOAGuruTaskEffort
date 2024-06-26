@@ -4,7 +4,6 @@ const {
   FetchData,
   UpdateTask,
   FetchFUllData,
-
   ProjectsList,
   CategoryList,
   SubCategoryList,
@@ -66,6 +65,7 @@ router.post('/api/admin-login', AdminLogin);
 
 router.get('/api/users',UserData);
 router.get('/api/getProject/:user_id',projectFromAssign);
+
 router.post('/api/assignProject',assignProject);
 
 // Employee Task Show to admin 

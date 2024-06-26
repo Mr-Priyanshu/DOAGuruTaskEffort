@@ -27,6 +27,7 @@ const ProjectAssignmentForm = () => {
 
   // FetchAssign User Details and data 
 
+
   const fetchAssignProjectsData = () => {
     axios.get('http://localhost:3001/api/assignProject')
         .then(response => {
@@ -46,7 +47,7 @@ const ProjectAssignmentForm = () => {
   
 
   return (
-    <div className="max-w-md mx-auto mt-8">
+    <div className="max-w-md mx-auto mt-8 border rounded-xl shadow-xl p-9 border-cyan-600 m-5 " >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* User Select */}
         <div>
@@ -56,7 +57,7 @@ const ProjectAssignmentForm = () => {
             name="user"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full py-1 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border-2 border-cyan-600 "
           >
             <option value="">Select User</option>
             {users.map(user => (
@@ -73,7 +74,7 @@ const ProjectAssignmentForm = () => {
             name="project"
             value={selectedProject}
             onChange={(e) => setSelectedProject(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full py-1 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border-2 border-cyan-600"
           >
             <option value="">Select Project</option>
             {projects.map(project => (
@@ -90,7 +91,7 @@ const ProjectAssignmentForm = () => {
             name="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full py-1 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border-2 border-cyan-600"
           >
             <option value="">Select Category</option>
             {categories.map(category => (
@@ -103,7 +104,7 @@ const ProjectAssignmentForm = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-4 py-2 text-base font-medium rounded-md shadow-sm text-white border-2 border-cyan-600  hover:bg-cyan-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-black "
           >
             Assign Project
           </button>

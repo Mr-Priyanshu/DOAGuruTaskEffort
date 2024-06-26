@@ -219,7 +219,7 @@ const projectFromAssign = (req, res) => {
 }
 
 const assignProject = (req, res) => {
-  const { projectName, categoryId, userId } = req.body;
+  const { projectId, categoryId, userId } = req.body;
   const assignCategoryQuery = 'INSERT INTO assigned_projects (project_id, category_id, user_id) VALUES (?, ?, ?)';
   db.query(assignCategoryQuery, [projectId, categoryId, userId], (err, assignResults) => {
     if (err) {
@@ -251,6 +251,8 @@ const getUserTasks = (req, res) => {
 // Define the route to download user tasks as an Excel file
 const DownloadUserTaskReport = (req, res) => {
   const { userId } = req.params;
+  const { userName } = req.params;
+   
 
   const query = `
     SELECT user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date
@@ -258,7 +260,7 @@ const DownloadUserTaskReport = (req, res) => {
     WHERE user_id = ?
   `;
 
-  db.query(query, [userId], (err, results) => {
+  db.query(query, [userId, userName], (err, results) => {
     if (err) {
       return res.status(500).send(err);
     }
@@ -266,8 +268,10 @@ const DownloadUserTaskReport = (req, res) => {
     const workbook = new excel.Workbook();
     const worksheet = workbook.addWorksheet('User Tasks');
 
+
     worksheet.columns = [
       { header: 'User ID', key: 'user_id', width: 10 },
+      { header: 'User Name', key: 'name', width: 20 },
       { header: 'Project or Client Name', key: 'ProjectOrClientName', width: 30 },
       { header: 'Category', key: 'Category', width: 20 },
       { header: 'SubCategory', key: 'SubCategory', width: 20 },
@@ -279,7 +283,7 @@ const DownloadUserTaskReport = (req, res) => {
     worksheet.addRows(results);
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', `attachment; filename=user_${userId}_tasks.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=user_${userId}_tasksReport.xlsx`);
 
     workbook.xlsx.write(res)
       .then(() => {
