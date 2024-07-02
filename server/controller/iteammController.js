@@ -106,7 +106,7 @@ const ProjectsList = (req, res) => {
 
 const CategoryList = (req, res) => {
   const { projects_id } = req.query;
-  const query = 'SELECT * FROM categories ';
+  const query = 'SELECT * FROM category ';
   db.query(query, (err, result) => {
     if (err) {
       console.error('Error fetching categories:', err);
@@ -121,7 +121,7 @@ const CategoryList = (req, res) => {
 const SubCategoryList = (req, res) => {
   const { category_id } = req.query;
   console.log(category_id)
-  const query = 'SELECT * FROM subcategories WHERE category_id = ?';
+  const query = 'SELECT * FROM subcategory WHERE category_id = ?';
 
   db.query(query, [category_id], (err, result) => {
     if (err) {

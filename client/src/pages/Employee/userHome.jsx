@@ -212,23 +212,18 @@ function UserHome() {
   };
   
   const handleCategoryChange = (e) => {
-    const categoryValue = e.target.value; // category name
-    
-    setSelectedCategory(categoryValue);
+    const categoryId = e.target.value;
+    setSelectedCategory(categoryId);
     setFormData({
       ...formData,
-      Category: categoryValue,
-     
+      Category: categoryId
     });
-    console.log(categorys); // array of object hai jisme categories hai us projec  tki
-    const CurrentCategory = categorys.find((ele) => ele.name == categoryValue); 
-    // us category ke name ko is azrray of obje mai dhundh jba wo mil gaya to ye return karta hai wah object ki full detail
-    // jisme id bhi hoti hai 
-    console.log('Current Cateogry', CurrentCategory);
-    axios.get(`http://localhost:3001/api/sub-category-list?category_id=${CurrentCategory.id}`)
+    console.log("line 221", categoryId)
+
+    axios.get(`http://localhost:3001/api/sub-category-list?category_id=${categoryId}`)
       .then(response => {
         setSubCategory(response.data);
-        console.log('SubC', response.data)
+        console.log(response.data)
       })
       .catch(error => {
         console.error("There was an error fetching the sub-categories!", error);
@@ -292,7 +287,7 @@ function UserHome() {
                                 <select id="ProjectClient" required name="ProjectOrClientName" value={formData.ProjectOrClientName} onChange={handleProjectsChange} className="block border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-60 p-2.5 light:bg-white-700 dark:border-gray-600 dark:placeholder-black-400 dark:text-black dark:focus:ring-black-500 dark:focus:border-blue-500">
                                   <option value="">Choose a ProjectOrClientName</option>
                                   {projects.map(project => (
-                                    <option key={project.id} value={project.id}>{project.name}</option>
+                                    <option key={project.id} value={project.name}>{project.name}</option>
                                   ))}
                                 </select>
                               </div>
