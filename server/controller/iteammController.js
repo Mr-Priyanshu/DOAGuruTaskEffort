@@ -4,16 +4,17 @@ const excel = require('exceljs');
 // Route to add-Task data 
 const AddData = (req, res) => {
   console.log('here');
-  const { user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin } = req.body;
+  const { user_id,user_full_name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin } = req.body;
 
-  if (!user_id || !ProjectOrClientName || !Category || !SubCategory || !TaskDescription || !ConsumingTimeInMin) {
+  if (!user_id || !user_full_name || !ProjectOrClientName || !Category || !SubCategory || !TaskDescription || !ConsumingTimeInMin) {
     return res.status(400).send('All fields are required');
   }
   const taskDate = new Date().toISOString().split('T')[0]; // current date 
-  console.log(user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin)
+  console.log(user_id, user_full_name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin)
 
-  const query = 'INSERT INTO tasks (user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  db.query(query, [user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, taskDate], (err, result) => {
+  const query = 'INSERT INTO tasks (user_id, name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  db.query(query, [user_id, user_full_name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, taskDate], (err, result) => {
+    console.log(result)
     if (err) {
       return res.status(500).send(err);
     }
@@ -234,7 +235,7 @@ const getUserTasks = (req, res) => {
   const { userId } = req.params;
 
   const query = `
-    SELECT user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date
+    SELECT user_id, name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date
     FROM tasks
     WHERE user_id = ?
   `;
@@ -255,7 +256,7 @@ const DownloadUserTaskReport = (req, res) => {
    
 
   const query = `
-    SELECT user_id, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date
+    SELECT user_id, name, ProjectOrClientName, Category, SubCategory, TaskDescription, ConsumingTimeInMin, task_date
     FROM tasks
     WHERE user_id = ?
   `;

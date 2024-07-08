@@ -60,12 +60,13 @@ function App() {
         <main>
           {/* other then use Router part user router  */}
           <Routes>
-            <Route path="/" element={<LoginPage setRender={handleRender} />} />
+            {userRole === 'admin' ? (<Route path='/' element={<AdminHomePage/>}/>) : (<Route path="/Logout" element={<LoginPage setRender={handleRender} />} />)}
+            {/* <Route path="/" element={<LoginPage setRender={handleRender} />} /> */}
             <Route path="UserHome" element={<UserHome />} />
             <Route path="TaskView" element={<TaskView />} />
            
             {/* Admin Routes  */}
-            <Route path='Admin-Home-page' element={<AdminHomePage/>}/>
+            {/* <Route path='Admin-Home-page' element={<AdminHomePage/>}/> */}
             <Route path='employee-show-register-page' element={<EmployeePage/>}/>
             <Route path="/registerUser" element={<RegisterUser/>} />
             <Route path="project-add" element={<ProjectsPage/>} />

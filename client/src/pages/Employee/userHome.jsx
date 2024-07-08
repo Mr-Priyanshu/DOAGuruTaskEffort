@@ -50,8 +50,12 @@ function UserHome() {
     // let user = localStorage.getItem('user');
     // user = JSON.parse(user);
     console.log(user);
+    console.log(formData)
 
-    axios.post('http://localhost:3001/api/add-data', { user_id: user.id, ...formData })
+    axios.post('http://localhost:3001/api/add-data', { user_id: user.id, 
+      user_full_name: user.full_name, 
+      ...formData 
+    })
 
       .then(response => {
         cogoToast.success('आपका टास्क सफलतापूर्वक जोड़ दिया गया है।');
@@ -190,7 +194,7 @@ function UserHome() {
   };
 
   const handleProjectsChange = (e) => {
-    const projectId = e.target.value;
+    const projectId = e?.target.value
     setSelectedProjects(projectId);
     setFormData({
       ...formData,
@@ -213,12 +217,14 @@ function UserHome() {
   
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
+    const selectedCategory = allCategory.find(category => category.id == categoryId);
     setSelectedCategory(categoryId);
-    setFormData({
-      ...formData,
-      Category: categoryId
-    });
-    console.log("line 221", categoryId)
+    let obj = {...formData, Category: categoryId, CategoryName: selectedCategory.name};
+    console.log("line 219", categoryId, selectedCategory.name)
+    console.log(obj)
+    setFormData({...obj});
+
+
 
     axios.get(`http://localhost:3001/api/sub-category-list?category_id=${categoryId}`)
       .then(response => {
@@ -229,6 +235,7 @@ function UserHome() {
         console.error("There was an error fetching the sub-categories!", error);
       });
   };
+  
 
   useEffect(() => {
     fetchProjectListData()
