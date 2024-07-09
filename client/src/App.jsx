@@ -1,5 +1,5 @@
 import { Routes, Route, useNavigate, } from 'react-router-dom'
-import './App.css'
+// import './App.css'
 import { useEffect, useState } from 'react';
 
 // All Pages Import Here 
@@ -18,6 +18,8 @@ import ProjectsPage from './pages/Admin/projects';
 import AddData from './pages/Admin/Addprojects';
 import ProjectAssignmentForm from './pages/Admin/assignProoject';
 import TaskReportDownload from './pages/Admin/Report';
+import Blank from './pages/blank';
+
 
 function App() {
   const [render, setRender] = useState(false);
@@ -46,7 +48,7 @@ function App() {
 
   return (
     <>
-      <div className="App">
+      <div className="App flex flex-col min-h-screen">
         {/* \\This Section only nav bar section and side bar section if use then */}
         <nav>
           {userRole === 'admin' ? (
@@ -57,22 +59,26 @@ function App() {
           {/* <AdminNavbar/> */}
         </nav>
         {/* this section is also use main screen on landing page  */}
-        <main>
+        <main className=' flex-grow justify-center '>
           {/* other then use Router part user router  */}
           <Routes>
-            {userRole === 'admin' ? (<Route path='/' element={<AdminHomePage/>}/>) : (<Route path="/Logout" element={<LoginPage setRender={handleRender} />} />)}
-            {/* <Route path="/" element={<LoginPage setRender={handleRender} />} /> */}
+            {/* {userRole === 'admin' ? (<Route path='/' element={<AdminHomePage/>}/>) : (<Route path="/Logout" element={<LoginPage setRender={handleRender} />} />)} */}
+            
+            <Route path="/" element={<LoginPage setRender={handleRender} />} />
+
             <Route path="UserHome" element={<UserHome />} />
             <Route path="TaskView" element={<TaskView />} />
            
             {/* Admin Routes  */}
-            {/* <Route path='Admin-Home-page' element={<AdminHomePage/>}/> */}
+            <Route path='Admin-Home-page' element={<AdminHomePage/>}/>
             <Route path='employee-show-register-page' element={<EmployeePage/>}/>
             <Route path="/registerUser" element={<RegisterUser/>} />
             <Route path="project-add" element={<ProjectsPage/>} />
             <Route path="/AddProject" element={<AddData/>} />
             <Route path="/assign-projects" element={<ProjectAssignmentForm/>} />
             <Route path="/Employee-report" element={<TaskReportDownload/>} />
+            <Route path='/blank' element={<Blank/>}/>
+           
 
           </Routes>
         </main>

@@ -9,7 +9,7 @@ import cogoToast from 'cogo-toast';
 let defaultTaskData = {
   ProjectOrClientName: '',
   Category: '',
-  SubCategory: '',
+  subCategory: '',
   TaskDescription: '',
   ConsumingTimeInMin: '',
 }
@@ -50,10 +50,13 @@ function UserHome() {
       [name]: value
     });
   };
+
+  console.log(formData);
   // Task Add Form handle   
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    // let user = localStorage.getItem('user');
+    // user = JSON.parse(user);
     console.log(user);
     console.log(formData)
 
@@ -93,6 +96,8 @@ function UserHome() {
         console.error('There was an error!', error);
       });
   };
+
+ 
   // Edit Task handle 
   const handleEditTask = (task) => {
     setIsUpdate(true)
@@ -222,17 +227,18 @@ function UserHome() {
   
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
-    const selectedCategoryList = allCategory.find(category => category.name === categoryId);
+    console.log(categoryId);
+    const selectedCategoryFirst = allCategory.find(category => category.name === categoryId);
+    console.log(selectedCategoryFirst);
     setSelectedCategory(categoryId);
-    console.log(selectedCategoryList, "Ye check kro ki ye aya  ");
-    let obj = {...formData, Category: categoryId, CategoryName: selectedCategoryList?.name};
-    console.log("line 219", categoryId, selectedCategoryList.name)
+    let obj = {...formData, Category: categoryId, CategoryName: selectedCategory?.name};
+    console.log("line 219", categoryId, selectedCategory?.name)
     console.log(obj)
     setFormData({...obj});
 
 
 
-    axios.get(`http://localhost:3001/api/sub-category-list?category_id=${selectedCategoryList.id}`)
+    axios.get(`http://localhost:3001/api/sub-category-list?category_id=${selectedCategoryFirst.id}`)
       .then(response => {
         setSubCategory(response.data);
         console.log(response.data)
@@ -247,6 +253,8 @@ function UserHome() {
     fetchProjectListData()
     fetchTasks(date);
   }, [date]);
+
+  console.log(taskData);
 
   return (
     <div className="homePage">
@@ -486,3 +494,5 @@ function UserHome() {
 }
 
 export default UserHome;
+
+is me add-data api me kya problem  a rahihe bad request ki 

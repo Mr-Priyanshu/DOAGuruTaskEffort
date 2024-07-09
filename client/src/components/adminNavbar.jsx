@@ -20,7 +20,7 @@ const navigation = [
   { name: 'Employee', href: 'employee-show-register-page', current: true },
   { name: 'Projects', href: 'project-add', current: true },
   { name: 'Assign Project', href: 'assign-projects', current: true },
-  { name: 'Report', href: 'Employee-report', current: true },
+  { name: 'Report', href: 'Employee-report',  current: true},
 ]
 
 
